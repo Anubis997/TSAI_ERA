@@ -54,8 +54,9 @@ class ResBlock(nn.Module):
         x = self.bn2(x)
 
         residual = self.shortcut(residual)
-        x += residual
-        x = self.relu2(x)
+        y=x+residual
+        #x += residual
+        x = self.relu2(y)
 
         return x
 
@@ -98,29 +99,29 @@ class Layer(nn.Module):
         
         residual = x
         x = self.resblock_layer1(x)
-        x += residual
+        # x += residual
+        y = x+residual
+        y = self.conv1_layer2(y)
+        y = self.bn1_layer2(y)
+        y = self.relu1_layer2(y)
+        y = self.maxpool_layer2(y)
 
-        x = self.conv1_layer2(x)
-        x = self.bn1_layer2(x)
-        x = self.relu1_layer2(x)
-        x = self.maxpool_layer2(x)
-
-        x = self.conv1_layer3(x)
-        x = self.bn1_layer3(x)
-        x = self.relu1_layer3(x)
-        x = self.maxpool_layer3(x)
+        y = self.conv1_layer3(y)
+        y = self.bn1_layer3(y)
+        y = self.relu1_layer3(y)
+        y = self.maxpool_layer3(y)
         
-        residual = x
-        x = self.resblock_layer3(x)
-        x += residual
+        residual = y
+        y = self.resblock_layer3(y)
+        z = residual+y
 
-        x = self.maxpool_layer4(x)
+        z = self.maxpool_layer4(z)
 
-        x = self.avgpool(x)
-        x = x.view(x.size(0), -1)
-        x = self.fc(x)
+        z = self.avgpool(z)
+        z = z.view(z.size(0), -1)
+        z = self.fc(z)
 
-        return F.log_softmax(x, dim=1)
+        return F.log_softmax(z, dim=1)
 
 # Instantiate the network
 # model = Layer()
