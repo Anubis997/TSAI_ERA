@@ -18,7 +18,7 @@ class PrepBlock(nn.Module):
         super(PrepBlock, self).__init__()
         self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=kernel_size, stride=stride, padding=padding)
         self.bn1 = nn.BatchNorm2d(out_channels)
-        self.relu1 = nn.ReLU(inplace=True)
+        self.relu1 = nn.ReLU(inplace=False)  # Non-inplace ReLU
 
     def forward(self, x):
         x = self.conv1(x)
@@ -31,10 +31,10 @@ class ResBlock(nn.Module):
         super(ResBlock, self).__init__()
         self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=kernel_size, stride=stride, padding=padding)
         self.bn1 = nn.BatchNorm2d(out_channels)
-        self.relu1 = nn.ReLU(inplace=True)
+        self.relu1 = nn.ReLU(inplace=False)  # Non-inplace ReLU
         self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=kernel_size, stride=1, padding=padding)
         self.bn2 = nn.BatchNorm2d(out_channels)
-        self.relu2 = nn.ReLU(inplace=True)
+        self.relu2 = nn.ReLU(inplace=False)  # Non-inplace ReLU
 
         self.shortcut = nn.Sequential()
         if stride != 1 or in_channels != out_channels:
@@ -54,9 +54,8 @@ class ResBlock(nn.Module):
         x = self.bn2(x)
 
         residual = self.shortcut(residual)
-        y=x+residual
-        #x += residual
-        x = self.relu2(y)
+        x = x + residual  # Non-inplace addition
+        x = self.relu2(x)
 
         return x
 
@@ -67,19 +66,19 @@ class Layer(nn.Module):
 
         self.conv1_layer1 = nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1)
         self.bn1_layer1 = nn.BatchNorm2d(128)
-        self.relu1_layer1 = nn.ReLU(inplace=True)
+        self.relu1_layer1 = nn.ReLU(inplace=False)  # Non-inplace ReLU
         self.maxpool_layer1 = nn.MaxPool2d(kernel_size=3, stride=1, padding=1)
 
         self.resblock_layer1 = ResBlock(128, 128)
 
         self.conv1_layer2 = nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1)
         self.bn1_layer2 = nn.BatchNorm2d(256)
-        self.relu1_layer2 = nn.ReLU(inplace=True)
+        self.relu1_layer2 = nn.ReLU(inplace=False)  # Non-inplace ReLU
         self.maxpool_layer2 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         self.conv1_layer3 = nn.Conv2d(256, 512, kernel_size=3, stride=1, padding=1)
         self.bn1_layer3 = nn.BatchNorm2d(512)
-        self.relu1_layer3 = nn.ReLU(inplace=True)
+        self.relu1_layer3 = nn.ReLU(inplace=False)  # Non-inplace ReLU
         self.maxpool_layer3 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         self.resblock_layer3 = ResBlock(512, 512)
@@ -99,30 +98,30 @@ class Layer(nn.Module):
         
         residual = x
         x = self.resblock_layer1(x)
-        # x += residual
-        y = x+residual
-        y = self.conv1_layer2(y)
-        y = self.bn1_layer2(y)
-        y = self.relu1_layer2(y)
-        y = self.maxpool_layer2(y)
+        x = x + residual  # Non-inplace addition
 
-        y = self.conv1_layer3(y)
-        y = self.bn1_layer3(y)
-        y = self.relu1_layer3(y)
-        y = self.maxpool_layer3(y)
+        x = self.conv1_layer2(x)
+        x = self.bn1_layer2(x)
+        x = self.relu1_layer2(x)
+        x = self.maxpool_layer2(x)
+
+        x = self.conv1_layer3(x)
+        x = self.bn1_layer3(x)
+        x = self.relu1_layer3(x)
+        x = self.maxpool_layer3(x)
         
-        residual = y
-        y = self.resblock_layer3(y)
-        z = residual+y
+        residual = x
+        x = self.resblock_layer3(x)
+        x = x + residual  # Non-inplace addition
 
-        z = self.maxpool_layer4(z)
+        x = self.maxpool_layer4(x)
 
-        z = self.avgpool(z)
-        z = z.view(z.size(0), -1)
-        z = self.fc(z)
+        x = self.avgpool(x)
+        x = x.view(x.size(0), -1)
+        x = self.fc(x)
 
-        return F.log_softmax(z, dim=1)
+        return F.log_softmax(x, dim=1)
 
 # Instantiate the network
-# model = Layer()
-# print(model)
+#model = Layer()
+#print(model)
