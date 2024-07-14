@@ -35,7 +35,7 @@ def train(model, device, train_loader, optimizer, epoch):
     # Backpropagation
     loss.backward()
     optimizer.step()
-
+    scheduler.step()
     # Update pbar-tqdm
 
     pred = y_pred.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
