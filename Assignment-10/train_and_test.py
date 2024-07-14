@@ -1,4 +1,10 @@
 from tqdm import tqdm
+import torch
+import torchvision
+import torchvision.transforms as transforms
+import torch.optim as optim
+import torch.nn as nn
+import torch.nn.functional as F
 
 train_losses = []
 test_losses = []
