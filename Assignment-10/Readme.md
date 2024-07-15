@@ -5,8 +5,8 @@ We use RandomCrop, FlipLR and Cutout data augmentation techniques
 # Parameters and score
 1. Number of parameters: 6,575,370
 
-2. Best Train Accuracy: 98.54%
+2. Best Train Accuracy: 98.66%
 
-3. Best Test Accuracy: 92.97%
+3. Best Test Accuracy: 93.31%
 
 
