@@ -7,6 +7,6 @@ We use RandomCrop, FlipLR and Cutout data augmentation techniques
 
 2. Best Train Accuracy: 98.54%
 
-3. est Test Accuracy: 92.97%
+3. Best Test Accuracy: 92.97%
 
 
