@@ -46,7 +46,7 @@ class BasicBlock(nn.Module):
         x = self.bn2(x)
         x = x+ self.shortcut(residual)
         
-        return F.ReLu(x,inplace=True)
+        return F.relu(x)
 
 
 class Layer(nn.Module):
