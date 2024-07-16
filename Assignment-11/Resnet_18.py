@@ -12,10 +12,10 @@ class PrepBlock(nn.Module):
         self.maxpooling = nn.MaxPool2d(3, stride=2, padding=1)
 
     def forward(self, x):
-        residual = self.conv_input1(x)
-        residual = self.batch_norm1(residual)
-        residual = self.activation1(residual)
-        x = self.maxpooling(residual)
+        x = self.conv_input1(x)
+        x = self.batch_norm1(x)
+        x = self.activation1(x)
+        x = self.maxpooling(x)
         return x
 
 
@@ -25,6 +25,7 @@ class BasicBlock(nn.Module):
         super(BasicBlock, self).__init__()
         self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(out_channels)
+        self.relu1=nn.ReLU(inplace=False)
         self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn2 = nn.BatchNorm2d(out_channels)
 
@@ -34,16 +35,18 @@ class BasicBlock(nn.Module):
                 nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=stride, bias=False),
                 nn.BatchNorm2d(out_channels)
             )
+        self.relu2=nn.ReLU(inplace=False)
 
     def forward(self, x):
         residual = x
-
-        out = F.relu(self.bn1(self.conv1(x)))
-        out = self.bn2(self.conv2(out))
-
-        out += self.shortcut(residual)
-        out = F.relu(out)
-        return out
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = self.relu1(x)
+        x = self.conv2(x)
+        x=  self.bn2(x)
+        x = x+ self.shortcut(residual)
+        x = self.relu2(x)
+        return x
 
 
 class Layer(nn.Module):
@@ -69,8 +72,8 @@ class Layer(nn.Module):
             BasicBlock(in_channels=512, out_channels=512, stride=1)
         )
 
-        self.maxpool = nn.AdaptiveAvgPool2d((4,4))  # Adjusted to (4, 4) for spatial dimensions
-        self.fc = nn.Linear(512*4*4, 10)  # Adjusted input size for fully connected layer
+        self.maxpool = nn.AdaptiveAvgPool2d(1)  # Adjusted to (4, 4) for spatial dimensions
+        self.fc = nn.Linear(512, 10)  # Adjusted input size for fully connected layer
 
     def forward(self, x):
         x = self.layer1(x)
@@ -83,5 +86,5 @@ class Layer(nn.Module):
         x = x.view(x.size(0), -1)
         x = self.fc(x)
 
-        return x
+        return F.log_softmax(x, dim=1)
 
