@@ -35,7 +35,7 @@ class BasicBlock(nn.Module):
                 nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=stride, bias=False),
                 nn.BatchNorm2d(out_channels)
             )
-        
+
 
     def forward(self, x):
         residual = x
@@ -45,7 +45,7 @@ class BasicBlock(nn.Module):
         x = self.conv2(x)
         x = self.bn2(x)
         x = x+ self.shortcut(residual)
-        
+
         return F.relu(x)
 
 
@@ -54,7 +54,7 @@ class Layer(nn.Module):
         super(Layer, self).__init__()
 
         self.layer1 = PrepBlock(in_channels=3, out_channels=64, kernel_size=7, stride=2, padding=3)
-        
+
         self.layer2 = nn.Sequential(
             BasicBlock(in_channels=64, out_channels=64, stride=1),
             BasicBlock(in_channels=64, out_channels=64, stride=1)
@@ -87,4 +87,3 @@ class Layer(nn.Module):
         x = self.fc(x)
 
         return F.log_softmax(x, dim=1)
-
