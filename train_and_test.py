@@ -8,6 +8,8 @@ import torch.nn.functional as F
 
 
 def train(model, device, train_loader, optimizer,scheduler, epoch):
+  train_losses=[]
+  train_acc=[]
   model.train()
   pbar = tqdm(train_loader)
   correct = 0
@@ -44,6 +46,8 @@ def train(model, device, train_loader, optimizer,scheduler, epoch):
     return train_losses,train_acc
 
 def test(model, device, test_loader):
+    test_losses=[]
+    test_acc=[]
     model.eval()
     test_loss = 0
     correct = 0
