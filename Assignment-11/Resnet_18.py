@@ -35,7 +35,7 @@ class BasicBlock(nn.Module):
                 nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=stride, bias=False),
                 nn.BatchNorm2d(out_channels)
             )
-        self.relu2=nn.ReLU(inplace=False)
+        
 
     def forward(self, x):
         residual = x
@@ -46,7 +46,7 @@ class BasicBlock(nn.Module):
         x=  self.bn2(x)
         x = x+ self.shortcut(residual)
         x = self.relu2(x)
-        return x
+        return F.ReLu(x,inplace=True)
 
 
 class Layer(nn.Module):
