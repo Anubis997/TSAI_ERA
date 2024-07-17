@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-def train(model, device, train_loader, optimizer,scheduler, epoch):
+def train(model, device, train_loader, optimizer,scheduler, epoch,train_losses=train_acc=()):
     
     model.train()
     pbar = tqdm(train_loader)
@@ -44,7 +44,7 @@ def train(model, device, train_loader, optimizer,scheduler, epoch):
   
       
 
-def test(model, device, test_loader):
+def test(model, device, test_loader,test_losses,test_acc):
      
       model.eval()
       test_loss = 0
