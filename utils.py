@@ -10,6 +10,7 @@ import os
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 from torch_lr_finder import LRFinder
 import torch.optim as optim
+import matplotlib.pyplot as plt
 
 
 # Define transformations
@@ -35,8 +36,6 @@ def get_train_test_transform():
 
 def plotting_train_test_accuracy(train_acc,train_losses,test_acc,test_losses):
     t = [t_items.item() for t_items in train_losses]
-    %matplotlib inline
-    import matplotlib.pyplot as plt
     fig, axs = plt.subplots(2,2,figsize=(15,10))
     axs[0, 0].plot(t)
     axs[0, 0].set_title("Training Loss")
