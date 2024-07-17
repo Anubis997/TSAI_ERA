@@ -30,6 +30,8 @@ def get_train_test_transform():
         transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616))
     ])
 
+    return train_transform, test_transform
+
 
 def plotting_train_test_accuracy(train_acc,train_losses,test_acc,test_losses):
     t = [t_items.item() for t_items in train_losses]
