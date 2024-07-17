@@ -42,4 +42,22 @@ def plotting_train_test_accuracy(train_acc,train_losses,test_acc,test_losses):
     axs[1, 1].plot(test_acc)
     axs[1, 1].set_title("Test Accuracy")
 
+def get_misclassified_images(number):
+    x_features = []
+    y_labels = []
 
+    x_features = torch.stack([testset[i][0] for i in range(len(testset))]).cuda()
+    y_labels = [testset[i][1] for i in range(len(testset))]
+
+    #Evaluation mode
+    model.eval()
+
+    #Inferencing
+    with torch.no_grad():
+      predicted_classes = torch.argmax(model(x_tensor),dim=1).tolist()
+
+    misclassified_indexes = [i for i in range(len(testset)) if predicted_classes[i] != y_labels[i]]
+
+    if len(misclassified_indexes) >= number:
+        misclassified_images = [testset[i][0] for i in misclassified_indexes[:number]]
+    return misclassified_images
