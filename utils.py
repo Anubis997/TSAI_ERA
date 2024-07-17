@@ -1,15 +1,11 @@
 import torch
 import torchvision
 import torchvision.transforms as transforms
-import torch.optim as optim
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.optim.lr_scheduler import OneCycleLR
 import torchvision.datasets as datasets
 import os
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
-from torch_lr_finder import LRFinder
-import torch.optim as optim
 import matplotlib.pyplot as plt
 
 
