@@ -6,11 +6,6 @@ import torch.optim as optim
 import torch.nn as nn
 import torch.nn.functional as F
 
-train_losses=[]
-train_acc=[]
-test_losses=[]
-test_acc=[]
-
 
 def train(model, device, train_loader, optimizer,scheduler, epoch):
     
